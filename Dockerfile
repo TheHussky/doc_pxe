@@ -1,8 +1,7 @@
 FROM ubuntu:20.04
 # Get neeedd packages
 RUN apt-get -y update \
-    && apt-get -y install dnsmasq python3 wget pxelinux
-
+    && apt-get -y install dnsmasq python3 wget pxelinux iproute2
 # Extract vmlinuz and initrd from downloaded iso 
 # https://askubuntu.com/questions/1238070
 RUN mkdir /tftp \
@@ -17,6 +16,7 @@ RUN mkdir /tftp \
 COPY tftp/ tftp/
 COPY dnsmasq.conf /etc/dnsmasq.conf
 COPY entrypoint.sh /
+COPY pyconf.py /
 
 # Run dnsmasq & launch a server
 CMD ./entrypoint.sh
