@@ -10,14 +10,13 @@ RUN mkdir temp \
 
     && tar -xzvf tftp.tar.gz -C temp/ \
     && mv temp/ubuntu-installer/amd64/* /tftp \
-    && mv /tftp/linux /tftp/vmlinuz \
     && rm -r temp && rm -rd /tftp/boot-screens \
     && rm /tftp/pxelinux.cfg/default \
     && gunzip -d /tftp/initrd.gz \
     && cp /usr/lib/PXELINUX/pxelinux.0 /tftp/pxelinux.0 \ 
     && cp /usr/lib/syslinux/modules/bios/*.c32 /tftp
 
-COPY tftp/ tftp/
+COPY tftp/ /tftp/
 COPY dnsmasq.conf /etc/dnsmasq.conf
 COPY entrypoint.sh /
 COPY pyconf.py /
