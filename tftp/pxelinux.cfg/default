@@ -1,0 +1,5 @@
+DEFAULT install
+LABEL install
+    KERNEL vmlinuz
+    INITRD initrd
+    APPEND ip=dhcp ramdisk_size=1500000 url=http://host/ubuntu-20.04.3-live-server-amd64.iso splash=verbose autoinstall console=ttyS0,115200u8 ds=nocloud-net;s=http:$IP_HOST//host:8000/$IP_HEX root=/dev/ram0 cloud-config-url=http://host:8000/userdatas/user-data
