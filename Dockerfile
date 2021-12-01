@@ -6,11 +6,7 @@ RUN apt-get -y update \
 # https://askubuntu.com/questions/1238070
 RUN mkdir /tftp \
     && wget http://old-releases.ubuntu.com/releases/20.04/ubuntu-20.04-live-server-amd64.iso -O /tftp/ubuntu-20.04-live-server-amd64.iso \
-    && mount /tftp/ubuntu-20.04-live-server-amd64.iso /mnt \ 
-    && cp /mnt/casper/vmlinuz /tftp \
-    && cp /mnt/casper/initrd /tftp \ 
-    && umount /mnt \
-    && cp /usr/lib/PXELINUX/gpxelinux.0 /tftp/pxelinux.0.bios \ 
+    && cp /usr/lib/PXELINUX/pxelinux.0 /tftp/pxelinux.0.bios \ 
     && cp /usr/lib/syslinux/modules/bios/*.c32 /tftp
 
 COPY tftp/ tftp/
