@@ -1,4 +1,7 @@
 #!/bin/bash
+
+./
+
 dnsmasq -C /dnsmasq.conf -dk &
 python3 -m http.server --directory /tftp &
 # Wait for any process to exit
