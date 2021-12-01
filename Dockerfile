@@ -1,26 +1,22 @@
 FROM ubuntu:20.04
-#get neeedd packages
-RUN apt-get -y update
-RUN apt-get -y install dnsmasq python3 wget
+# Get neeedd packages
+RUN apt-get -y update \
+    && apt-get -y install dnsmasq python3 wget pxelinux
 
-RUN mkdir /tftp
-#ensure all needed files are present
-RUN wget -O tftp.tar.gz -nv http://archive.ubuntu.com/ubuntu/dists/focal-updates/main/installer-amd64/20101020ubuntu614.3/legacy-images/netboot/netboot.tar.gz
-RUN wget -O /tftp/ubuntu-20.04.3-live-server-amd64.iso -nv https://ubuntu.com/download/server
+# Extract vmlinuz and initrd from downloaded iso 
+# https://askubuntu.com/questions/1238070
+RUN mkdir /tftp \
+    && wget http://old-releases.ubuntu.com/releases/20.04/ubuntu-20.04-live-server-amd64.iso -O /tftp/ubuntu-20.04-live-server-amd64.iso \
+    && mount /tftp/ubuntu-20.04-live-server-amd64.iso /mnt \ 
+    && cp /mnt/casper/vmlinuz /tftp \
+    && cp /mnt/casper/initrd /tftp \ 
+    && umount /mnt \
+    && cp /usr/lib/PXELINUX/gpxelinux.0 /tftp/pxelinux.0.bios \ 
+    && cp /usr/lib/syslinux/modules/bios/*.c32 /tftp
 
-#set right locations
-RUN mkdir temp 
-RUN tar -xzvf tftp.tar.gz -C temp/ 
-RUN mv temp/ubuntu-installer/amd64/* /tftp 
-RUN rm -r temp && rm -rd /tftp/boot-screens 
-RUN rm /tftp/pxelinux.cfg/default 
-RUN gunzip -d /tftp/initrd.gz
+COPY tftp/ tftp/
+COPY dnsmasq.conf /etc/dnsmasq.conf
+COPY entrypoint.sh /
 
-#get configs
-COPY tftp/ /tftp 
-COPY tftp/defaults /tftp/pxelinux.cfg
-COPY dnsmasq.conf /
-COPY dns_pyth /
-#run dnsmasq & launch a server
-CMD ./dns_pyth
-
+# Run dnsmasq & launch a server
+CMD ./entrypoint.sh
