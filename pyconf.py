@@ -38,9 +38,9 @@ for host in hosts:
 
     # Create address and write it to dnsmasq
     try:
-        addr = f"dhcp-host={DNS[host]},10.70.30.{ip}"
+        addr = f"dhcp-host={DNS[host]},172.18.150.{ip}"
     except:
-        addr = f"dhcp-host={host},10.70.30.{ip}"
+        addr = f"dhcp-host={host},172.18.150.{ip}"
     dns = open('/etc/dnsmasq.conf', 'a')
     dns.write(addr+'\n')
     addr=addr.split(',')[1]
