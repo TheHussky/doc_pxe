@@ -22,7 +22,6 @@ COPY tftp/ /tftp/
 COPY dnsmasq.conf /etc/dnsmasq.conf
 COPY entrypoint.sh /
 COPY pyconf.py /
-COPY threadedserver.py /
 
 # Run dnsmasq & launch a server
 CMD ./entrypoint.sh
