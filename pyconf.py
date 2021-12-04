@@ -51,5 +51,5 @@ for host in hosts:
     default_confs[-1] = default_confs[-1].replace('$user-data', host)
     for line in default_confs:
         host_conf.write(line)
-    default_confs[-1] = default_confs[-1].replace('$user-data', host)
+    default_confs[-1] = default_confs[-1].replace(host, '$user-data')
     host_conf.close()
