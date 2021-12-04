@@ -1,6 +1,7 @@
 import os
 DNS={
-    'compute-2':'00:1e:67:10:cc:9c'
+    'compute-2':'00:1e:67:10:cc:9c',
+    'compute-4':'00:1e:67:10:cc:20'
 }
 
 def ip_to_hex(ip_adress: str, hostname='hostname') -> str:
