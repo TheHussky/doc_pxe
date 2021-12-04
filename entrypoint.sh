@@ -11,7 +11,7 @@ python3 pyconf.py
 
 dnsmasq -C /etc/dnsmasq.conf -dk &
 cd /tftp
-python3 /threadedserver.py
+python3 -m ComplexHTTPServer
 cd -
 # Wait for any process to exit
 wait -n
