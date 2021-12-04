@@ -1,8 +1,10 @@
-from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
-if __name__ == '__main__':
+from http.server import HTTPServer, ThreadingHTTPServer, SimpleHTTPRequestHandler
+import socketserver
+def server():
     server_address = ('0.0.0.0', 8000)
-    handler=SimpleHTTPRequestHandler
-    httpd = ThreadingHTTPServer(server_address, handler)
-    print('running server at %s:%d' % server_address)
-    
+    class ThreadingHTTPServer(socketserver.ThreadingMixIn, HTTPServer):
+            pass
+    httpd = ThreadingHTTPServer(server_address, SimpleHTTPRequestHandler)
     httpd.serve_forever()
+if __name__=="__main__":
+    server()
