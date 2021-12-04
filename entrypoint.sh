@@ -5,7 +5,7 @@ if [ -z "$(ip a | grep 172.18.150)" ]; then
     exit 1
 fi
 
-sed -i "s/\$INTERFACE/$(ip a | grep 172.18.150.30 | awk '{ print $5 }')/g" /etc/dnsmasq.conf
+sed -i "s/\$INTERFACE/$(ip a | grep 172.18.150.30 | awk '{ print $7 }')/g" /etc/dnsmasq.conf
 
 python3 pyconf.py
 
