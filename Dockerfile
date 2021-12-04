@@ -4,7 +4,7 @@ RUN apt-get -y update \
     && apt-get -y install dnsmasq python3 wget pxelinux iproute2
 
 RUN wget -O tftp.tar.gz -nv http://archive.ubuntu.com/ubuntu/dists/focal-updates/main/installer-amd64/20101020ubuntu614.3/legacy-images/netboot/netboot.tar.gz
-RUN mkdir /tftp && wget http://old-releases.ubuntu.com/releases/20.04/ubuntu-20.04-live-server-amd64.iso -O /tftp/ubuntu-20.04-live-server-amd64.iso 
+RUN mkdir /tftp && wget https://releases.ubuntu.com/20.04.3/ubuntu-20.04.3-live-server-amd64.iso -O /tftp/ubuntu-20.04-live-server-amd64.iso 
 #set right locations
 RUN mkdir temp \
 
