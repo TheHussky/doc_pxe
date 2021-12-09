@@ -1,0 +1,105 @@
+#cloud-config
+autoinstall:
+  version: 1
+  apt:
+    geoip: true
+    preserve_sources_list: false
+    primary:
+      - arches: [amd64]
+        uri: http://ru.archive.ubuntu.com/ubuntu
+      - arches: [default]
+        uri: http://ports.ubuntu.com/ubuntu-ports
+  identity:
+    hostname: compute-5
+    password: "$6$openstack$SLjiZ0Gx36SUXf8rh88LAILLSpBnI.A0ZtkcWiBygxU2ZaEgAXg5H2IVtBsRwKscTgDEhmDtF8ZXako03BbCy/"
+    username: devops
+  locale: en_US
+  keyboard:
+    layout: us
+  ssh:
+    install-server: true
+    authorized-keys:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFAxDBOJiDp/kgKm0hPx0GwmyrN3lOhd/0rL2ICGmxds nekohacker@Ono-Sendai"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDgzJOxpZuh4N0KDcOq+To+oBPr8kmp69GMDb0qI2t5t asshadrunov@miem.hse.ru"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGd7J4+wQ4kV4j5tuycJ6viakwcxGo0sVH1FiZgm/YoD kud-aa"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB+gxYcCbOFXy2wBv3Nc0Rz+5Jsf9mYKw49j0cKEEjUN ansible"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG0dsnLGCsTKXKzdmRL3Z8KGWcaR53DF+OW70aAEUZS6 sthussky@xor"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILBP1GoX/chVawWy39mDP9KhQ8f6G9LJ75jLXSOoC2sp root@controller-0"
+  storage:
+    config:
+      - ptable: gpt
+        path: /dev/sda
+        grub_device: true
+        type: disk
+        id: disk-sda
+        wipe: superblock
+      - ptable: gpt
+        path: /dev/sdb
+        grub_device: true
+        type: disk
+        id: disk-sdb
+        wipe: superblock
+      # ====== BIOS GRUB ======
+      - device: disk-sda
+        size: 1MB
+        flag: bios_grub
+        number: 1
+        type: partition
+        id: bios-sda
+      - device: disk-sdb
+        size: 1MB
+        flag: bios_grub
+        number: 1
+        type: partition
+        id: bios-sdb
+      # ====== RAID Partitons ======
+      - device: disk-sda
+        wipe: superblock
+        size: -1
+        number: 2
+        type: partition
+        id: raid-sda
+      - device: disk-sdb
+        number: 2
+        size: -1
+        wipe: superblock
+        type: partition
+        id: raid-sdb
+      # ====== RAID ======
+      - id: raid
+        name: md0
+        raidlevel: raid1
+        devices: [raid-sda, raid-sdb]
+        type: raid
+        wipe: superblock
+      # ====== LVM ======
+      - name: vg0
+        devices: [raid]
+        type: lvm_volgroup
+        id: vg
+        wipe: superblock
+      - name: lv-0
+        volgroup: vg
+        type: lvm_partition
+        id: lvm-main
+        size: -1
+      # ====== Partiton ======
+      - fstype: ext4
+        volume: lvm-main
+        type: format
+        id: ubuntu
+      - path: /
+        device: ubuntu
+        type: mount
+        id: mount-0
+  user-data:
+    write_files:
+      - path: /etc/netplan/50-openstack-config.yaml
+        content: |
+          network:
+            version: 2
+            renderer: networkd
+            ethernets:
+            enp1s0f0:
+              addresses:
+                10.4.20.$LAST_OCTET$/24

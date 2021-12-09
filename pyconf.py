@@ -1,7 +1,11 @@
 import os
 DNS={
+    'controller-0':'00:1e:67:21:91:98',
+    'compute-1':'00:1e:67:28:a9:9c',
     'compute-2':'00:1e:67:10:cc:9c',
-    'compute-4':'00:1e:67:10:cc:20'
+    'compute-3':'00:15:17:ee:8d:0c',
+    'compute-4':'00:1e:67:10:cc:20',
+    'compute-5':'00:1e:67:1d:29:6c'
 }
 
 def ip_to_hex(ip_adress: str, hostname='hostname') -> str:
@@ -32,15 +36,15 @@ default.close()
 hosts = os.listdir('/tftp/cloud-init-bios/user-data')
 
 
-ip = 10
+ip = 180
 for host in hosts:
     ip += 1
 
     # Create address and write it to dnsmasq
     try:
-        addr = f"dhcp-host={DNS[host]},172.18.150.{ip}"
+        addr = f"dhcp-host={DNS[host]},172.18.180.{ip}"
     except:
-        addr = f"dhcp-host={host},172.18.150.{ip}"
+        addr = f"dhcp-host={host},172.18.180.{ip}"
     dns = open('/etc/dnsmasq.conf', 'a')
     dns.write(addr+'\n')
     addr=addr.split(',')[1]
