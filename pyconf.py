@@ -42,16 +42,16 @@ for host in hosts:
 
     # Create address and write it to dnsmasq
     try:
-        addr = f"dhcp-host={DNS[host]},172.18.180.{ip}"
+        addr = f"dhcp-host={DNS[host]},172.18.130.{ip}"
     except:
-        addr = f"dhcp-host={host},172.18.180.{ip}"
+        addr = f"dhcp-host={host},172.18.130.{ip}"
     dns = open('/etc/dnsmasq.conf', 'a')
     dns.write(addr+'\n')
     addr=addr.split(',')[1]
     dns.close()
 
     # Create pxelinux conf files based on default and link user-datas
-    host_conf = open(f"/tftp/pxelinux.cfg/{ip_to_hex(addr)}", 'w')
+    host_conf = open(f"tftp/pxelinux.cfg/{ip_to_hex(addr)}", 'w')
     default_confs[-1] = default_confs[-1].replace('$user-data', host)
     for line in default_confs:
         host_conf.write(line)
