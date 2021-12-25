@@ -26,9 +26,9 @@ autoinstall:
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG0dsnLGCsTKXKzdmRL3Z8KGWcaR53DF+OW70aAEUZS6 sthussky@xor"
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILBP1GoX/chVawWy39mDP9KhQ8f6G9LJ75jLXSOoC2sp root@controller-0"
   late-commands:
-    - rm /etc/netplan/00-installer-config.yaml
-    - echo "PermitRootLogin without-password" > /etc/ssh/sshd_config
-    - service sshd restart
+    - curtin in-target --target=/target -- rm /etc/netplan/00-installer-config.yaml
+    - curtin in-target --target=/target -- echo "PermitRootLogin without-password" > /etc/ssh/sshd_config
+    - curtin in-target --target=/target -- service sshd restart
   storage:
     config:
       - ptable: gpt
