@@ -29,7 +29,7 @@ autoinstall:
     - curtin in-target --target=/target -- rm /etc/netplan/00-installer-config.yaml
     - curtin in-target --target=/target -- echo "PermitRootLogin without-password" > /etc/ssh/sshd_config
     - curtin in-target --target=/target -- service sshd restart
-    - curtin in-target --target=/target cp /home/devops/.ssh/authorized_keys  /root/.ssh/authorized_keys
+    - curtin in-target --target=/target -- cp /home/devops/.ssh/authorized_keys  /root/.ssh/authorized_keys
   storage:
     config:
       - ptable: gpt
