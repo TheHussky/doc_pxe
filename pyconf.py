@@ -1,11 +1,11 @@
 import os
 DNS={
-    'controller-0':'00:1e:67:21:91:98',
-    'compute-1':'00:1e:67:28:a9:9c',
-    'compute-2':'00:1e:67:10:cc:9c',
-    'compute-3':'00:15:17:ee:8d:0c',
-    'compute-4':'00:1e:67:10:cc:20',
-    'compute-5':'00:1e:67:1d:29:6c'
+    '4863c272':'00:1e:67:21:91:98',
+    'cd445ae2':'00:1e:67:28:a9:9c',
+    '2a958102':'00:1e:67:10:cc:9c',
+    'c7b40815':'00:15:17:ee:8d:0c',
+    'cceaa826':'00:1e:67:10:cc:20',
+    'e2ba0f06':'00:1e:67:1d:29:6c'
 }
 
 def ip_to_hex(ip_adress: str, hostname='hostname') -> str:

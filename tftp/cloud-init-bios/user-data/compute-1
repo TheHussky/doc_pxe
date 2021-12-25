@@ -11,7 +11,7 @@ autoinstall:
         uri: http://ports.ubuntu.com/ubuntu-ports
   identity:
     hostname: compute-1
-    password: "$6$openstack$SLjiZ0Gx36SUXf8rh88LAILLSpBnI.A0ZtkcWiBygxU2ZaEgAXg5H2IVtBsRwKscTgDEhmDtF8ZXako03BbCy/"
+    password: "$6$rounds=4096$sMajMgW6Vq$PbZ58wigJE9e26lhFZcwoMs2sA87emaYYQek1pd7FiYnpSjbT4fA0wbZrBKW.ygZhGJnI/nRLztoFRnRj0EpG/"
     username: devops
   locale: en_US
   keyboard:
@@ -25,6 +25,10 @@ autoinstall:
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB+gxYcCbOFXy2wBv3Nc0Rz+5Jsf9mYKw49j0cKEEjUN ansible"
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG0dsnLGCsTKXKzdmRL3Z8KGWcaR53DF+OW70aAEUZS6 sthussky@xor"
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILBP1GoX/chVawWy39mDP9KhQ8f6G9LJ75jLXSOoC2sp root@controller-0"
+  late-commands:
+    - rm /etc/netplan/00-installer-config.yaml
+    - echo "PermitRootLogin without-password" > /etc/ssh/sshd_config
+    - service sshd restart
   storage:
     config:
       - ptable: gpt
@@ -100,6 +104,41 @@ autoinstall:
             version: 2
             renderer: networkd
             ethernets:
-            enp1s0f0:
-              addresses:
-                10.4.20.$LAST_OCTET$/24
+              enp1s0f0:
+                dhcp4: false
+              enp13s0f0:
+                addresses:
+                  - 172.18.130.$IP/24
+                routes:
+                  - to: 0.0.0.0/0
+                    via: 172.18.130.1
+                nameservers:
+                  addresses: [ "8.8.8.8" ]
+              enp13s0f1:
+                dhcp4: false
+              enp16s0f0:
+                dhcp4: false
+            vlans:
+              vlan.10: # Management
+                id: 10
+                link: enp13s0f0
+                # link: enp1s0f0
+                addresses: [10.4.20.10$N/24]
+              vlan.20: # VXLAN
+                id: 20
+                link: enp13s0f1
+                addresses: [10.69.69.10$N/24]
+              vlan.30: # Ceph
+                id: 30
+                link: enp16s0f0
+      - path: /etc/hosts
+        content: |
+          127.0.0.1 localhost
+
+          10.4.20.10     controller-0
+
+          10.4.20.101    compute-1
+          10.4.20.102    compute-2
+          10.4.20.103    compute-3
+          10.4.20.104    compute-4
+          10.4.20.105    compute-5
